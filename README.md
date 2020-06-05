@@ -1,6 +1,6 @@
 # rc-peru-client-simulacion-java
 
-Reporte de crédito de personas naturales y jurídicas que considera fuentes públicas y privadas.
+Reporte de Crédito de personas naturales y jurídicas que considera fuentes públicas y privadas.
 
 ## Requisitos
 
@@ -56,44 +56,33 @@ En el archivo **ApiTest.java**, que se encuentra en ***src/test/java/io/rc/simul
 
 ```java
 @Test
-public void getLAEByPersonTest() throws ApiException {
-	PeticionPersona request = new PeticionPersona();
-	Persona persona = new Persona();
-	DomicilioPeticion domicilio = new DomicilioPeticion();
-	
-	persona.setPrimerNombre("JUAN");
-	persona.setApellidoPaterno("PRUEBA");
-	persona.setApellidoMaterno("CUATRO");
-	persona.setFechaNacimiento("1980-01-04");
-	persona.setRFC("PUAC800104");
-	
-	domicilio.setDireccion("INSURGENTES SUR 1004");
-	domicilio.setColoniaPoblacion("INSURGENTES SUR");
-	domicilio.setDelegacionMunicipio("CIUDAD DE MEXICO");
-	domicilio.setCiudad("CIUDAD DE MEXICO");
-	domicilio.setEstado(CatalogoEstados.CDMX);
-	domicilio.setCP("11230");
-	
-	persona.setDomicilio(domicilio);
-	
-	request.setFolioOtorgante("1");
-	request.setSegmento(CatalogoSegmento.PP);
-	request.setPersona(persona);
-	
-	Respuesta response = api.getLAEByPerson(this.xApiKey, request);
-	logger.info(response.toString());
-}
-
-@Test
-public void getLAEByFolioConsultaTest() throws ApiException {
-	PeticionFolioConsulta request = new PeticionFolioConsulta();
-	
-	request.setFolioOtorgante("1");
-	request.setSegmento(CatalogoSegmento.PP);
-	request.setFolioConsulta("386636538");
-	
-	Respuesta response = api.getLAEByFolioConsulta(this.xApiKey, request);
-	logger.info(response.toString());
+public void getRCTest() throws ApiException {
+    Peticion request = new Peticion();
+    Integer estatusOK = 200;
+    Integer estatusNoContent = 204;
+    
+    try {
+    	
+    	request.setFolio("10000200");
+    	request.setNumeroDocumento("67544489");
+    	request.setTipoDocumento("1");
+    	
+    	ApiResponse<?> response = api.getGenericRC(xApiKey, request);
+  
+    	Assert.assertTrue(estatusOK.equals(response.getStatusCode()));
+    	
+    	if(estatusOK.equals(response.getStatusCode())) {
+    		Respuesta responseOK = (Respuesta) response.getData();
+    		logger.info(responseOK.toString());
+    	}
+    	
+	}catch (ApiException e) {
+    	if(!estatusNoContent.equals(e.getCode())) {
+    		logger.info(e.getResponseBody());
+    	}
+    	Assert.assertTrue(estatusOK.equals(e.getCode()));
+	}
+    
 }
 ```
 
