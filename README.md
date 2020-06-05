@@ -76,7 +76,7 @@ public void getRCTest() throws ApiException {
     		logger.info(responseOK.toString());
     	}
     	
-    }catch (ApiException e) {
+	}catch (ApiException e) {
     	if(!estatusNoContent.equals(e.getCode())) {
     		logger.info(e.getResponseBody());
     	}
